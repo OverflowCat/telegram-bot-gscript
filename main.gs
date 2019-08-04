@@ -1,3 +1,11 @@
+
+
+
+//env properties
+var scriptProperties = PropertiesService.getScriptProperties();
+var keys = scriptProperties.getKeys();
+ 
+
 function doPost(e){
   var estringa = JSON.parse(e.postData.contents);
   var payload = identificar(estringa);
@@ -5,10 +13,33 @@ function doPost(e){
     "method": "post",
     "payload": payload
   }
-  UrlFetchApp.fetch("https://api.telegram.org/botYOUR-API-HERE/", data);
-}
+    var rtn = JSON.parse(UrlFetchApp.fetch("https://api.telegram.org/bot" + keys.tgbot + "/", data));
+ 
+  //debug
+  var payload = {
+    "method": "sendMessage",
+    "chat_ID": "405582582",
+    "text": "DEBUG" // + e.postData.contents.toString()
+  }
+  
+
+  }
+
+// Deal with /commands
+function slashcmd(cmd) {
+        var t_ = e.message.text + " ";
+        if (cmd.charAt(0) != "/") cmd = "/" + cmd;
+        if (t_.substr(0, cmd.length + 1) == cmd + " ") {
+          return (t_.substring(cmd.length + 1, t_.length - 1));
+        }
+        return false;
+      }
+
 
 function identificar(e){
+  
+
+
   if (e.message.text){
     var mensaje = {
       "method": "sendMessage",
